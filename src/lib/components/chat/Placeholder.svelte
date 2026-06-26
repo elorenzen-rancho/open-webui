@@ -106,6 +106,21 @@
 					}}
 				/>
 			{:else}
+				<div
+					class="text-[45px] text-gray-800 dark:text-gray-100 font-semibold mb-1"
+					in:fade={{ duration: 100 }}
+				>
+					Hi, {$user?.name?.split(' ')[0] ?? $user?.name}.
+				</div>
+
+				<div
+					class="mt-1 mb-4 text-sm text-gray-500 dark:text-gray-400 max-w-xl"
+					in:fade={{ duration: 100, delay: 50 }}
+				>
+					Welcome to Rancho's AI Arcade. To keep sessions safe and compliant, please avoid entering
+					personal, proprietary, or sensitive information.
+				</div>
+
 				<div class="flex flex-row justify-center gap-2.5 @sm:gap-3 w-fit px-5 max-w-xl">
 					<div class="flex shrink-0 justify-center">
 						<div class="flex -space-x-4 mb-0.5" in:fade={{ duration: 100 }}>
@@ -155,7 +170,7 @@
 								</span>
 							</Tooltip>
 						{:else}
-							{$i18n.t('Hello, {{name}}', { name: $user?.name })}
+							&nbsp;
 						{/if}
 					</div>
 				</div>

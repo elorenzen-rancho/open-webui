@@ -311,4 +311,5 @@ cypress/screenshots
 
 
 
-/static/*
+build.prebuild-bak/
+static/pyodide/

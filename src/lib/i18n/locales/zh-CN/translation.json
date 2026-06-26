@@ -1054,7 +1054,6 @@
 	"Headers": "HTTP 标头",
 	"Headers must be a valid JSON object": "HTTP 标头必须是有效的 JSON 格式",
 	"Height": "高度",
-	"Hello, {{name}}": "您好，{{name}}",
 	"Help": "帮助",
 	"Help the community discover great models": "帮助社区发现优质模型",
 	"Hex Color": "十六进制颜色代码",

@@ -311,4 +311,4 @@ cypress/screenshots
 
 
 
-/static/*
+/static/*build.prebuild-bak/

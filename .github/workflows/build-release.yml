@@ -35,7 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "v${{ steps.get_version.outputs.version }}_rancho" \
+          gh release create "v${{ steps.get_version.outputs.version }}_rancho_v0.2" \
             --title "v${{ steps.get_version.outputs.version }}_rancho" \
             --notes-file /tmp/release-notes.md
 

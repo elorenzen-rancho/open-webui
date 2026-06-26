@@ -1044,8 +1044,6 @@
 						</div>
 					</button>
 				</Tooltip>
-
-
 			</div>
 
 			<div
@@ -1105,10 +1103,7 @@
 						{#each pinnedItems as itemId (itemId)}
 							{@const meta = getMenuItemMeta(itemId)}
 							{#if meta && isMenuItemVisible(itemId)}
-								<div
-									class="px-[0.4375rem] flex justify-center text-gray-200"
-									data-id={itemId}
-								>
+								<div class="px-[0.4375rem] flex justify-center text-gray-200" data-id={itemId}>
 									<a
 										id="sidebar-{itemId}-button"
 										class="grow flex items-center space-x-3 rounded-2xl px-2.5 py-2 hover:bg-white/10 dark:hover:bg-gray-900 transition"

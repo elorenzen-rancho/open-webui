@@ -411,8 +411,9 @@
 	{#if confirmEdit}
 		<div
 			id="sidebar-chat-item"
-			class=" w-full flex justify-between rounded-xl px-[11px] py-[6px] border-l-2 {unread ? "border-[#FF8800]" : "border-transparent"} {id === $chatId ||
-			confirmEdit
+			class=" w-full flex justify-between rounded-xl px-[11px] py-[6px] border-l-2 {unread
+				? 'border-[#FF8800]'
+				: 'border-transparent'} {id === $chatId || confirmEdit
 				? 'bg-white/20 dark:bg-gray-900 selected'
 				: selected
 					? 'bg-white/20 dark:bg-gray-950 selected'
@@ -447,8 +448,9 @@
 	{:else}
 		<a
 			id="sidebar-chat-item"
-			class=" w-full flex justify-between rounded-xl px-[11px] py-[6px] border-l-2 {unread ? "border-[#FF8800]" : "border-transparent"} {id === $chatId ||
-			confirmEdit
+			class=" w-full flex justify-between rounded-xl px-[11px] py-[6px] border-l-2 {unread
+				? 'border-[#FF8800]'
+				: 'border-transparent'} {id === $chatId || confirmEdit
 				? 'bg-white/20 dark:bg-gray-900 selected'
 				: selected
 					? 'bg-white/20 dark:bg-gray-950 selected'

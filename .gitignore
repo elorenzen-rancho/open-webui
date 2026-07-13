@@ -311,3 +311,8 @@ cypress/videos
 cypress/screenshots
 .vscode/settings.json
 build.prebuild-bak/
+
+# Claude skills
+.agents
+.claude
+scripts/litellm.env

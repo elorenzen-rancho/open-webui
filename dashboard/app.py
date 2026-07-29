@@ -60,13 +60,19 @@ with st.sidebar:
         help="Base URL of the open-webui instance",
         disabled=use_mock,
     )
-    api_key = st.text_input(
-        "Admin API key",
-        value=os.getenv("ARCADE_API_KEY", ""),
-        type="password",
-        help="Admin Bearer token (Settings → Account → API keys)",
-        disabled=use_mock,
-    )
+
+    _env_api_key = os.getenv("ARCADE_API_KEY", "")
+    if _env_api_key:
+        api_key = _env_api_key
+        st.success("Admin API key loaded from .env", icon="🔒")
+    else:
+        api_key = st.text_input(
+            "Admin API key",
+            value="",
+            type="password",
+            help="Admin Bearer token (Settings → Account → API keys)",
+            disabled=use_mock,
+        )
 
     st.divider()
     st.subheader("Date range")
@@ -153,13 +159,13 @@ if group_load_errors:
 
 st.title("🎯 Arcade Usage Dashboard")
 range_label = f"{custom_start} → {custom_end}" if custom_start else "All time"
-st.caption(f"Instance: `{api_url}` · Range: {range_label} · Data refreshes every 5 min")
+st.caption(f"Instance: `{api_url}` · Range: {range_label} · Data refreshes every 24 hours")
 
 # ---------------------------------------------------------------------------
 # KPI row
 # ---------------------------------------------------------------------------
 
-_total_users = data["summary"].get("total_users", 0)
+_total_users = len(data["all_users_raw"])
 _active_users = len(df_users_analytics) if not df_users_analytics.empty else 0
 _total_msgs = data["summary"].get("total_messages", 0)
 _adoption_pct = round(_active_users / _total_users * 100) if _total_users > 0 else 0

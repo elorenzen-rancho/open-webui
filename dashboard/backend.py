@@ -9,8 +9,11 @@ from datetime import date, timedelta
 import pandas as pd
 import requests
 import streamlit as st
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 DEFAULT_API_URL = "https://arcade.rbsprod.net"
+CACHE_TTL_SECONDS = 24 * 60 * 60  # 24 hours
 
 # ---------------------------------------------------------------------------
 # Mock data
@@ -95,10 +98,23 @@ class ArcadeClient:
         self.base_url = base_url.rstrip("/")
         self._session = requests.Session()
         self._session.headers["Authorization"] = f"Bearer {api_key}"
+        # Retry transient network blips / server hiccups instead of surfacing
+        # them as a user-facing timeout/connection error immediately.
+        retries = Retry(
+            total=3,
+            backoff_factor=1,
+            status_forcelist=[502, 503, 504],
+            allowed_methods=["GET"],
+        )
+        adapter = HTTPAdapter(max_retries=retries)
+        self._session.mount("https://", adapter)
+        self._session.mount("http://", adapter)
 
     def _get(self, path: str, params: dict | None = None) -> dict | list:
         url = f"{self.base_url}{path}"
-        resp = self._session.get(url, params=params, timeout=30)
+        # (connect timeout, read timeout) — fail fast if the server is truly
+        # unreachable, but give slow analytics queries room to finish.
+        resp = self._session.get(url, params=params, timeout=(5, 30))
         resp.raise_for_status()
         return resp.json()
 
@@ -165,45 +181,45 @@ def _date_params(start_ts: int | None, end_ts: int | None) -> dict:
 # Cached data fetchers
 # ---------------------------------------------------------------------------
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_summary(base_url: str, api_key: str, start_ts: int | None, end_ts: int | None) -> dict:
     return ArcadeClient(base_url, api_key).summary(start_ts, end_ts)
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_model_analytics(
     base_url: str, api_key: str, start_ts: int | None, end_ts: int | None
 ) -> list[dict]:
     return ArcadeClient(base_url, api_key).model_analytics(start_ts, end_ts)
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_model_analytics_by_group(
     base_url: str, api_key: str, start_ts: int | None, end_ts: int | None, group_id: str
 ) -> list[dict]:
     return ArcadeClient(base_url, api_key).model_analytics(start_ts, end_ts, group_id=group_id)
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_user_analytics(
     base_url: str, api_key: str, start_ts: int | None, end_ts: int | None
 ) -> list[dict]:
     return ArcadeClient(base_url, api_key).user_analytics(start_ts, end_ts)
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_daily_stats(
     base_url: str, api_key: str, start_ts: int | None, end_ts: int | None
 ) -> list[dict]:
     return ArcadeClient(base_url, api_key).daily_stats(start_ts, end_ts)
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_groups(base_url: str, api_key: str) -> list[dict]:
     return ArcadeClient(base_url, api_key).groups()
 
 
-@st.cache_data(ttl=300, show_spinner=False)
+@st.cache_data(ttl=CACHE_TTL_SECONDS, show_spinner=False)
 def fetch_all_users(base_url: str, api_key: str) -> list[dict]:
     return ArcadeClient(base_url, api_key).all_users()
 
